@@ -34,3 +34,9 @@
 ##-keepclassmembers class com.magicbid.app.App {
 ##    void myMethod();
 ##}
+# Keep the entry point to your library (change 'com.example.yourlibrary.YourLibrary' to your actual entry point)
+-keep public class com.magicbid.app.App {
+    public *;
+}
+
+# Add any other specific rules as needed

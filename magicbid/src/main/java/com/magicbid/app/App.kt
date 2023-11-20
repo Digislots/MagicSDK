@@ -87,17 +87,6 @@ open class App : Application(), Application.ActivityLifecycleCallbacks, Lifecycl
 
                         }
 
-
-
-                        //Prefs.setAppId(applicationContext,appid!!.app_id)
-
-
-                       // Log.d("resultData", result.toString())
-
-                      // Prefs.setResponseAll(applicationContext, result)
-
-
-
                     }
 
                     override fun onFailure(call: Call<MagicbidResponse>, t: Throwable) {
@@ -213,11 +202,7 @@ open class App : Application(), Application.ActivityLifecycleCallbacks, Lifecycl
             if (result != null) {
 
                 val adsList = result.filter { it.ads_type == 2 }
-                Log.d("opena_pp", adsList.toString())
                 val sortedAdsList = adsList.sortedByDescending { it.cpm }
-                Log.d("opena_pp", sortedAdsList.toString())
-
-
                 if (sortedAdsList.isNotEmpty()) {
                     loadopenad(context, sortedAdsList[currentAddPosition].adscode, sortedAdsList,sortedAdsList[currentAddPosition].ads_id)
                 }
@@ -331,8 +316,6 @@ open class App : Application(), Application.ActivityLifecycleCallbacks, Lifecycl
                     isLoadingAd = false
                     loadTime = Date().time
                     Log.d(LOG_TAG, "onAdLoaded.")
-                    Log.d("opena_pp", sortedAdsList[currentAddPosition].cpm.toString())
-                    Log.d("opena_pp", sortedAdsList[currentAddPosition].adscode)
 
                     val formatter = SimpleDateFormat("yyyy-MM-dd")
                     val date = Date()
@@ -410,13 +393,6 @@ open class App : Application(), Application.ActivityLifecycleCallbacks, Lifecycl
                                 }
 
                             })
-//                                withContext(Dispatchers.Main) {
-//                                    try {
-//                                        res.body().toString()
-//                                    } catch (e: Exception) {
-//                                        Log.d("dvbvb", e.toString())
-//                                    }
-//                                }
 
                     }
 
@@ -426,9 +402,6 @@ open class App : Application(), Application.ActivityLifecycleCallbacks, Lifecycl
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     isLoadingAd = false
-                    Log.d("opena_pp", loadAdError.message)
-                    Log.d("opena_pp", sortedAdsList[currentAddPosition].cpm.toString())
-                    Log.d("opena_pp", sortedAdsList[currentAddPosition].adscode)
                     Log.d(LOG_TAG, "onAdFailedToLoad: " + loadAdError.message)
                     if (loadAdError.code == 3) {
 

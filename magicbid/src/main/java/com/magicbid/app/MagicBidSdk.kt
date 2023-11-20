@@ -54,9 +54,7 @@ class MagicBidSdk(private var context: Context) {
         if (result != null) {
             try {
                 val adsList = result.filter { it.ads_type == 1 }
-                Log.d("adlist", adsList.toString())
                 sortedAdsList = adsList.sortedByDescending { it.cpm }.toMutableList()
-                Log.d("sortedAdsList", sortedAdsList.toString())
                 if (sortedAdsList.isNotEmpty()) {
                     loadadaptiveBannerAdd(activity, linearLayout, sortedAdsList[currentAddPosition].adscode,sortedAdsList[currentAddPosition].ads_id)
                 }
@@ -67,10 +65,8 @@ class MagicBidSdk(private var context: Context) {
     }
 
    private fun loadadaptiveBannerAdd(activity: Activity, linearLayout: LinearLayout, adId: String, adsId: Int) {
-        Log.d("currentposition", "currentAddPosition : $currentAddPosition")
         adView = AdView(activity)
         adView!!.adUnitId = adId
-        Log.d("adidddd", adId)
         linearLayout.removeAllViews()
         linearLayout.addView(adView)
         val adSize = getAdSizeaptiveBannerAdd(activity, linearLayout)
@@ -93,12 +89,8 @@ class MagicBidSdk(private var context: Context) {
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 Log.d("banner_ad", adError.message)
-                Log.d("banner_ad", sortedAdsList[currentAddPosition].cpm.toString())
-                Log.d("banner_ad", sortedAdsList[currentAddPosition].adscode)
                 //postData(adId)
                 if (adError.code == 3) {
-                    //postData(adId)
-
                     if (sortedAdsList.size-1 > currentAddPosition){
                         currentAddPosition++
                         loadadaptiveBannerAdd(
@@ -138,9 +130,7 @@ class MagicBidSdk(private var context: Context) {
         if (result != null) {
             try {
                 val adsList = result.filter { it.ads_type == 1 }
-                Log.d("adlist", adsList.toString())
                 sortedAdsList = adsList.sortedByDescending { it.cpm }.toMutableList()
-                Log.d("sortedAdsList", sortedAdsList.toString())
                 if (sortedAdsList.isNotEmpty()) {
                     inlineloadAdd(activity, linearLayout, sortedAdsList[currentAddPosition].adscode,sortedAdsList[currentAddPosition].ads_id)
                 }
@@ -159,7 +149,6 @@ class MagicBidSdk(private var context: Context) {
         Log.d("currentposition", "currentAddPosition : $currentAddPosition")
         adView = AdView(activity)
         adView!!.adUnitId = adId
-        Log.d("adidddd", adId)
         linearLayout.removeAllViews()
         linearLayout.addView(adView)
         val adSize = inlinegetAdSize(activity, linearLayout)
@@ -183,19 +172,12 @@ class MagicBidSdk(private var context: Context) {
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 Log.d("banner_ad", adError.message)
-                Log.d("banner_ad", sortedAdsList[currentAddPosition].cpm.toString())
-                Log.d("banner_ad", sortedAdsList[currentAddPosition].adscode)
                 if (adError.code == 3) {
-                    //    currentAddPosition++
-
                     if (sortedAdsList.size-1 > currentAddPosition){
                         currentAddPosition++
                         inlineloadAdd(activity, linearLayout, sortedAdsList[currentAddPosition].adscode,sortedAdsList[currentAddPosition].ads_id)
 
                     }
-
-
-
                 }
             }
 
@@ -223,9 +205,7 @@ class MagicBidSdk(private var context: Context) {
         listnerInterface = listnerInterface1
         if (result != null) {
             val adsList = result.filter { it.ads_type == 3 }
-            Log.d("adlist", adsList.toString())
-            sortedAdsList = adsList.sortedByDescending { it.cpm }.toMutableList()
-            Log.d("sortedAdsList", sortedAdsList.toString())
+             sortedAdsList = adsList.sortedByDescending { it.cpm }.toMutableList()
 
             if (sortedAdsList.isNotEmpty()) {
 
@@ -243,8 +223,6 @@ class MagicBidSdk(private var context: Context) {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 mInterstitialAd = null
                 Log.d("InterstitialAd", adError.message)
-                Log.d("InterstitialAd", sortedAdsList[currentAddPosition].cpm.toString())
-                Log.d("InterstitialAd", sortedAdsList[currentAddPosition].adscode)
                 listnerInterface.onAdFailedToLoad(adError)
                 if (adError.code == 3) {
                     // currentAddPosition++
@@ -278,7 +256,6 @@ class MagicBidSdk(private var context: Context) {
 
 
             override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                //Log.d(TAG, 'Ad was loaded.')
                 mInterstitialAd = interstitialAd
 
                 if (mInterstitialAd != null) {
@@ -286,22 +263,16 @@ class MagicBidSdk(private var context: Context) {
                     adidinterstital = adsId
 
 //                      mInterstitialAd?.show(context as Activity)
-                    Log.d("InterstitialAd", sortedAdsList[currentAddPosition].cpm.toString())
-                    Log.d("InterstitialAd", sortedAdsList[currentAddPosition].adscode)
 
                 }
 
                 mInterstitialAd?.fullScreenContentCallback =
                     object : FullScreenContentCallback() {
                         override fun onAdClicked() {
-                            // Called when a click is recorded for an ad.
-                            //Log.d(TAG, "Ad was clicked.")
                             listnerInterface.onAdClicked()
                         }
 
                         override fun onAdDismissedFullScreenContent() {
-                            // Called when ad is dismissed.
-                            //Log.d(TAG, "Ad dismissed fullscreen content.")
                             mInterstitialAd = null
                             listnerInterface.onAdDismissedFullScreenContent()
 
@@ -315,20 +286,17 @@ class MagicBidSdk(private var context: Context) {
                         }
 
                         override fun onAdImpression() {
-                            // Called when an impression is recorded for an ad.
-                            //Log.d(TAG, "Ad recorded an impression.")
                             listnerInterface.onAdImpression()
                         }
 
                         override fun onAdShowedFullScreenContent() {
-                            // Called when ad is shown.
-                            //Log.d(TAG, "Ad showed fullscreen content.")
                             listnerInterface.onAdShowedFullScreenContent()
                         }
                     }
 
 
                 listnerInterface.onAdLoaded(boolean = true)
+
 
             }
 
@@ -351,9 +319,7 @@ class MagicBidSdk(private var context: Context) {
     fun showNativeAds(context: Context, view: TemplateView) {
         if (result != null) {
             val adsList = result.filter { it.ads_type == 4 }
-            Log.d("adlist", adsList.toString())
             sortedAdsList = adsList.sortedByDescending { it.cpm }.toMutableList()
-            Log.d("sortedAdsList", sortedAdsList.toString())
 
             if (sortedAdsList.isNotEmpty()) {
                 loadnativead(context, view, sortedAdsList[currentAddPosition].adscode,sortedAdsList[currentAddPosition].ads_id)
@@ -379,9 +345,6 @@ class MagicBidSdk(private var context: Context) {
             }, 15000)
         }.withAdListener(object : AdListener() {
             override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-
-                Log.d("loadnativead", sortedAdsList[currentAddPosition].cpm.toString())
-                Log.d("loadnativead", sortedAdsList[currentAddPosition].adscode)
                 if (loadAdError.code == 3) {
 
                     if (sortedAdsList.size-1 > currentAddPosition){
@@ -407,9 +370,7 @@ class MagicBidSdk(private var context: Context) {
     fun sowAdrewarded() {
         if (result != null) {
             val adsList = result.filter { it.ads_type == 5 }
-            Log.d("adlist", adsList.toString())
             sortedAdsList = adsList.sortedByDescending { it.cpm }.toMutableList()
-            Log.d("sortedAdsList", sortedAdsList.toString())
             if (sortedAdsList.isNotEmpty()) {
                 loadrewarded(sortedAdsList[currentAddPosition].adscode,sortedAdsList[currentAddPosition].ads_id)
             }

@@ -1,5 +1,6 @@
 package com.magicbid.app
 
+import com.example.mylibrary.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -57,7 +58,7 @@ object ApiUtilities {
                 level = HttpLoggingInterceptor.Level.BODY
             })
 
-            Retrofit.Builder().baseUrl("https://admin.digislots.in")
+            Retrofit.Builder().baseUrl(BuildConfig.baseurl)
                 .addConverterFactory(GsonConverterFactory.create()).client(httpClient.build())
                 .build()
 
