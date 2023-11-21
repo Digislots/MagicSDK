@@ -54,11 +54,12 @@ object ApiUtilities {
             httpClient.sslSocketFactory(sslSocketFactory, trustAllCerts.get(0) as X509TrustManager)
             httpClient.hostnameVerifier(HostnameVerifier { hostname, session -> true })
 
-            httpClient.addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
+//            httpClient.addInterceptor(HttpLoggingInterceptor().apply {
+//                level = HttpLoggingInterceptor.Level.BODY
+//            })
+          //  "\"https://admin.digislots.in\""
 
-            Retrofit.Builder().baseUrl(BuildConfig.baseurl)
+            Retrofit.Builder().baseUrl("https://admin.digislots.in")
                 .addConverterFactory(GsonConverterFactory.create()).client(httpClient.build())
                 .build()
 

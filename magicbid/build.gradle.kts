@@ -18,10 +18,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-        val key: String = gradleLocalProperties(rootDir).getProperty("api")
-
-        buildConfigField("String","baseurl",key)
     }
+
 
     buildTypes {
         release {

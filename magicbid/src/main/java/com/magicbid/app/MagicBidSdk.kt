@@ -59,7 +59,6 @@ class MagicBidSdk(private var context: Context) {
                     loadadaptiveBannerAdd(activity, linearLayout, sortedAdsList[currentAddPosition].adscode,sortedAdsList[currentAddPosition].ads_id)
                 }
             } catch (e: Exception) {
-                Log.d("dvbvb", e.toString())
             }
         }
     }
@@ -88,8 +87,6 @@ class MagicBidSdk(private var context: Context) {
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.d("banner_ad", adError.message)
-                //postData(adId)
                 if (adError.code == 3) {
                     if (sortedAdsList.size-1 > currentAddPosition){
                         currentAddPosition++
@@ -135,7 +132,6 @@ class MagicBidSdk(private var context: Context) {
                     inlineloadAdd(activity, linearLayout, sortedAdsList[currentAddPosition].adscode,sortedAdsList[currentAddPosition].ads_id)
                 }
             } catch (e: Exception) {
-                Log.d("dvbvb", e.toString())
             }
         }
     }
@@ -146,7 +142,6 @@ class MagicBidSdk(private var context: Context) {
         adId: String,
         adsId: Int
     ) {
-        Log.d("currentposition", "currentAddPosition : $currentAddPosition")
         adView = AdView(activity)
         adView!!.adUnitId = adId
         linearLayout.removeAllViews()
@@ -171,7 +166,6 @@ class MagicBidSdk(private var context: Context) {
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.d("banner_ad", adError.message)
                 if (adError.code == 3) {
                     if (sortedAdsList.size-1 > currentAddPosition){
                         currentAddPosition++
@@ -222,7 +216,6 @@ class MagicBidSdk(private var context: Context) {
         InterstitialAd.load(context, adscode, adRequest, object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 mInterstitialAd = null
-                Log.d("InterstitialAd", adError.message)
                 listnerInterface.onAdFailedToLoad(adError)
                 if (adError.code == 3) {
                     // currentAddPosition++
@@ -279,8 +272,6 @@ class MagicBidSdk(private var context: Context) {
                         }
 
                         override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                            // Called when ad fails to show.
-                            //Log.e(TAG, "Ad failed to show fullscreen content.")
                             mInterstitialAd = null
                             listnerInterface.onAdFailedToShowFullScreenContent(adError)
                         }
@@ -440,24 +431,6 @@ class MagicBidSdk(private var context: Context) {
             e.printStackTrace()
         }
 
-//        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
-//        if (connectivityManager is ConnectivityManager) {
-//            var link: LinkProperties =  connectivityManager.getLinkProperties(connectivityManager.activeNetwork) as LinkProperties
-////            Log.e("Network", link.linkAddresses.toString())
-////            Log.e("Network", link.linkAddresses[1].address.hostAddress)
-//            link?.let { linkProp ->
-//                for (linkAddress in linkProp.linkAddresses) {
-//                    val inetAddress = linkAddress.address
-//                    if (inetAddress is Inet4Address
-//                        && !inetAddress.isLoopbackAddress()
-//                        && inetAddress.isSiteLocalAddress()
-//                    ) {
-//                        Log.e("Network",inetAddress.getHostAddress())
-//                        ipAddress =  inetAddress.getHostAddress()
-//                    }
-//                }
-//            }
-//        }
 
         if (checkForInternet(context)) {
             val app_id = Prefs.getAppId(context)
