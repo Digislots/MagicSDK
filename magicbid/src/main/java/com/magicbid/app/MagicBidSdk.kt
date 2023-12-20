@@ -1,10 +1,10 @@
 package com.magicbid.app
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -33,6 +33,7 @@ import java.net.NetworkInterface
 import java.text.SimpleDateFormat
 import java.util.Date
 
+@Suppress("DEPRECATION")
 class MagicBidSdk(private var context: Context) {
     private lateinit var sortedAdsList: MutableList<Adscode>
     private val result = Prefs.getResponseAll(context)
@@ -40,11 +41,14 @@ class MagicBidSdk(private var context: Context) {
     private var isOpen = false
     private var rewardedInterstitialAd: RewardedInterstitialAd? = null
     private var adView: AdView? = null
+    @SuppressLint("SimpleDateFormat")
     private val formatter = SimpleDateFormat("yyyy-MM-dd")
     private val date = Date()
     private val currentdate = formatter.format(date)
     private var adidinterstital: Int = 0
     private var magic :Boolean = false
+    var adFailedCount = 0
+
 
     private var ipAddress ="0.0.0.0"
     private lateinit var listnerInterface:AdListnerInterface
@@ -59,6 +63,7 @@ class MagicBidSdk(private var context: Context) {
                     loadadaptiveBannerAdd(activity, linearLayout, sortedAdsList[currentAddPosition].adscode,sortedAdsList[currentAddPosition].ads_id)
                 }
             } catch (e: Exception) {
+                Log.d("magick bidSDK",e.toString())
             }
         }
     }
@@ -88,6 +93,8 @@ class MagicBidSdk(private var context: Context) {
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 if (adError.code == 3) {
+                    adFailedCount++
+                    Log.d("adFailedCount","Ad loading failed $adFailedCount times")
                     if (sortedAdsList.size-1 > currentAddPosition){
                         currentAddPosition++
                         loadadaptiveBannerAdd(
@@ -167,6 +174,8 @@ class MagicBidSdk(private var context: Context) {
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 if (adError.code == 3) {
+                    adFailedCount++
+                    Log.d("adFailedCount","Ad loading failed $adFailedCount times")
                     if (sortedAdsList.size-1 > currentAddPosition){
                         currentAddPosition++
                         inlineloadAdd(activity, linearLayout, sortedAdsList[currentAddPosition].adscode,sortedAdsList[currentAddPosition].ads_id)
@@ -219,7 +228,8 @@ class MagicBidSdk(private var context: Context) {
                 listnerInterface.onAdFailedToLoad(adError)
                 if (adError.code == 3) {
                     // currentAddPosition++
-
+                    adFailedCount++
+                    Log.d("adFailedCount","Ad loading failed $adFailedCount times")
                     if (sortedAdsList.size-1 > currentAddPosition){
                         currentAddPosition++
                         loadinterstitalad(
@@ -251,13 +261,14 @@ class MagicBidSdk(private var context: Context) {
             override fun onAdLoaded(interstitialAd: InterstitialAd) {
                 mInterstitialAd = interstitialAd
 
-                if (mInterstitialAd != null) {
+               // if (mInterstitialAd != null) {
 
-                    adidinterstital = adsId
+
 
 //                      mInterstitialAd?.show(context as Activity)
 
-                }
+               // }
+                adidinterstital = adsId
 
                 mInterstitialAd?.fullScreenContentCallback =
                     object : FullScreenContentCallback() {
@@ -337,6 +348,8 @@ class MagicBidSdk(private var context: Context) {
         }.withAdListener(object : AdListener() {
             override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                 if (loadAdError.code == 3) {
+                    adFailedCount++
+                    Log.d("adFailedCount","Ad loading failed $adFailedCount times")
 
                     if (sortedAdsList.size-1 > currentAddPosition){
                         currentAddPosition++
@@ -370,7 +383,8 @@ class MagicBidSdk(private var context: Context) {
 
     private fun loadrewarded(adscode: String, adsId: Int) {
         RewardedInterstitialAd.load(context,
-            adscode,
+            "ca-app-pub-3940256099942544/5354046379",
+            //adscode,
             AdManagerAdRequest.Builder().build(),
             object : RewardedInterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: RewardedInterstitialAd) {
@@ -381,6 +395,8 @@ class MagicBidSdk(private var context: Context) {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     rewardedInterstitialAd = null
                     if (adError.code == 3) {
+                        adFailedCount++
+                        Log.d("adFailedCount","Ad loading failed $adFailedCount times")
                         //currentAddPosition++
                         if (sortedAdsList.size-1 > currentAddPosition){
                             currentAddPosition++
@@ -422,7 +438,7 @@ class MagicBidSdk(private var context: Context) {
                 while (inetAddresses.hasMoreElements()) {
                     val inetAddress = inetAddresses.nextElement()
                     if (!inetAddress.isLoopbackAddress && inetAddress is Inet4Address) {
-                        ipAddress =  inetAddress.hostAddress
+                        ipAddress =  inetAddress.hostAddress!!
 
                     }
                 }
@@ -433,11 +449,11 @@ class MagicBidSdk(private var context: Context) {
 
 
         if (checkForInternet(context)) {
-            val app_id = Prefs.getAppId(context)
+            val appId = Prefs.getAppId(context)
 
 
-            ApiUtilities.getApiInterface()!!
-                .postData(ipAddress.toString(), app_id, adsId , currentdate)
+            ApiUtilities.getApiInterface()
+                .postData(ipAddress, appId, adsId , currentdate)
                 .enqueue(object : retrofit2.Callback<JsonObject> {
                     override fun onResponse(
                         call: Call<JsonObject>,
