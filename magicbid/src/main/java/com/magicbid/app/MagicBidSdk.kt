@@ -383,7 +383,6 @@ class MagicBidSdk(private var context: Context) {
 
     private fun loadrewarded(adscode: String, adsId: Int) {
         RewardedInterstitialAd.load(context,
-//            "ca-app-pub-3940256099942544/5354046379",
             adscode,
             AdManagerAdRequest.Builder().build(),
             object : RewardedInterstitialAdLoadCallback() {
